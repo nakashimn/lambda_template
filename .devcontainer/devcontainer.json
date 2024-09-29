@@ -1,0 +1,14 @@
+{
+	"name": "lambda_ts_template",
+	"dockerComposeFile": "../compose.yaml",
+	"service": "lambda_ts_template",
+	"workspaceFolder": "/workspace",
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"wallabyjs.quokka-vscode",
+				"formulahendry.code-runner"
+			]
+		}
+	}
+}

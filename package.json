@@ -1,0 +1,16 @@
+{
+  "name": "lambda_ts_template",
+  "version": "0.0.1",
+  "main": "index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {},
+  "author": "",
+  "description": "",
+  "dependencies": {
+    "@types/json2csv": "^5.0.7",
+    "json2csv": "^6.0.0-alpha.2",
+    "ts-node": "^10.9.2"
+  }
+}
