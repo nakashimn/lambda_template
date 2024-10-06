@@ -14,7 +14,7 @@ exports.handler = async (event) => {
     const webhookUrl = process.env.WEBHOOK_URL;
     const messages = {
         'IN_PROGRESS': process.env.IN_PROGRESS_MESSAGE ?? 'The build has started.',
-        'SUCCEEDED': process.env.SUCCESS_MESSAGE ?? 'The build completed successfully.',
+        'SUCCEEDED': process.env.SUCCEEDED_MESSAGE ?? 'The build completed successfully.',
         'FAILED': process.env.FALIED_MESSAGE ?? 'The build failed.'
     };
 
