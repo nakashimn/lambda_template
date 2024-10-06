@@ -12,11 +12,12 @@ exports.handler = async (event) => {
     const buildId = buildDetails['build-id'];
     const codebuildPageUrl = `https://${region}.console.aws.amazon.com/codesuite/codebuild/${account}/projects/${projectName}/build/${buildId}/log`;
     const currentPhaseContext = buildDetails['current-phase-context'];
+    const webhookUrl = process.env.WEBHOOK_URL;
     const messages = {
         'IN_PROGRESS': process.env.IN_PROGRESS_MESSAGE ?? 'The build has started.',
         'SUCCESS':  process.env.SUCCESS_MESSAGE ?? 'The build completed successfully.',
         'FAILED': process.env.FALIED_MESSAGE ?? 'The build failed.'
-    }
+    };
 
     // common message
     console.log(`[${appName}] DEBUG | project-name: ${projectName}:${version}`);
@@ -27,7 +28,17 @@ exports.handler = async (event) => {
     console.log(`[${appName}] DEBUG | env: ${process.env.SAMPLE}`);
 
     // notification
-
+    const message = {
+        text: `${projectName}:${version}\n${messages[buildStatus]}\n\n${codebuildPageUrl}`
+    };
+    const headers = {'Content-Type': 'application/json'};
+    axios.post(webhookUrl, message, {headers})
+    .then(response => {
+        console.log('[${appName}] DEBUG | Message sent successfully:', response.data);
+    })
+    .catch(error => {
+        console.error('[${appName}] DEBUG | Error sending message:', error);
+    });
 
     // response
     const response = {
