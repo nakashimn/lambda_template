@@ -7,7 +7,7 @@ exports.handler = async (event) => {
     console.log(`[handler] DEBUG | [${codebuild_project_name}:${build_number}] build_id: ${build_id}`);
     const response = {
         statusCode: 200,
-        body: JSON.stringify('Hello from Lambda!'),
+        body: JSON.stringify('Hello from Lambda!!!'),
     };
     return response;
 };
