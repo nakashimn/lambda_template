@@ -31,7 +31,7 @@ exports.handler = async (event) => {
         text: `${projectName}:${version}\n${messages[buildStatus]}\n\n${codebuildPageUrl}`
     };
     const headers = {'Content-Type': 'application/json'};
-    axios.post(webhookUrl, message, {headers})
+    axios.post(webhookUrl, message, headers)
     .then(response => {
         console.log(`[${appName}] DEBUG | Message sent successfully:`, response.data);
     })
