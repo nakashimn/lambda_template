@@ -2,7 +2,7 @@ const axios = require('axios');
 
 exports.handler = async (event) => {
     // const
-    const appName = 'CodebuildNotification';
+    const appName = process.env.APP_NAME ?? 'CodebuildNotification';
     const account = event.account;
     const region = event.region;
     const buildDetails = event.detail;
@@ -19,7 +19,7 @@ exports.handler = async (event) => {
         'FAILED': process.env.FALIED_MESSAGE ?? 'The build failed.'
     };
 
-    // common message
+    // logging
     console.log(`[${appName}] DEBUG | project-name: ${projectName}:${version}`);
     console.log(`[${appName}] DEBUG | build-id: ${buildId}}`);
     console.log(`[${appName}] DEBUG | build-status: ${buildStatus}`);
@@ -33,10 +33,10 @@ exports.handler = async (event) => {
     const headers = {'Content-Type': 'application/json'};
     axios.post(webhookUrl, message, {headers})
     .then(response => {
-        console.log('[${appName}] DEBUG | Message sent successfully:', response.data);
+        console.log(`[${appName}] DEBUG | Message sent successfully:`, response.data);
     })
     .catch(error => {
-        console.error('[${appName}] DEBUG | Error sending message:', error);
+        console.error(`[${appName}] DEBUG | Error sending message:`, error);
     });
 
     // response
