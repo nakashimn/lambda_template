@@ -26,13 +26,14 @@ exports.handler = async (event) => {
     console.log(`[${appName}] DEBUG | build-status: ${buildStatus}`);
     console.log(`[${appName}] DEBUG | codebuild-url: ${codebuildPageUrl}`);
     console.log(`[${appName}] DEBUG | current-phase-context: ${currentPhaseContext}`);
+    console.log(`[${appName}] DEBUG | webhook-url: ${webhookUrl}`);
 
     // notification
     const message = {
         text: `${projectName}:${version}\n${messages[buildStatus]}\n\n${codebuildPageUrl}`
     };
     const headers = {'Content-Type': 'application/json'};
-    axios.post(webhookUrl, message, headers)
+    await axios.post(webhookUrl, message, headers)
     .then(response => {
         console.log(`[${appName}] DEBUG | Message sent successfully:`, response.data);
     })
