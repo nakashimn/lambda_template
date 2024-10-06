@@ -6,6 +6,7 @@ exports.handler = async (event) => {
     const account = event.account;
     const region = event.region;
     const buildDetails = event.detail;
+    const projectName = buildDetails['project-name'];
     const buildStatus = buildDetails['build-status'];
     const buildId = buildDetails['build-id'];
     const streamName = buildDetails['additional-information']['logs']['stream-name'];
@@ -18,10 +19,10 @@ exports.handler = async (event) => {
         'FAILED': process.env.FALIED_MESSAGE ?? 'The build failed.'
     };
 
-    // construct project name
-    var projectName = buildDetails['project-name'];
+    // construct project title
+    var projectTitle = projectName;
     if (buildNumber != null) {
-        projectName += `:${buildNumber}`;
+        projectTitle += `:${buildNumber}`;
     }
 
     // construct Codebuild URL
@@ -31,7 +32,7 @@ exports.handler = async (event) => {
     }
 
     // logging
-    console.log(`[${appName}] DEBUG | project-name: ${projectName}`);
+    console.log(`[${appName}] DEBUG | project-name: ${projectTitle}`);
     console.log(`[${appName}] DEBUG | build-id: ${buildId}}`);
     console.log(`[${appName}] DEBUG | build-status: ${buildStatus}`);
     console.log(`[${appName}] DEBUG | codebuild-url: ${codebuildPageUrl}`);
@@ -40,7 +41,7 @@ exports.handler = async (event) => {
 
     // notification
     const message = {
-        text: `[${projectName}]\n${messages[buildStatus]}\n${codebuildPageUrl}`
+        text: `[${projectTitle}]\n${messages[buildStatus]}\n${codebuildPageUrl}`
     };
     const headers = {'Content-Type': 'application/json'};
     await axios.post(webhookUrl, message, headers)
@@ -55,7 +56,7 @@ exports.handler = async (event) => {
     const response = {
         statusCode: 200,
         body: JSON.stringify({
-            'project-name': projectName,
+            'project-name': projectTitle,
             'build-id': buildId,
             'build-status': buildStatus
         })
