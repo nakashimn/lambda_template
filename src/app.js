@@ -10,7 +10,8 @@ exports.handler = async (event) => {
     const buildStatus = buildDetails['build-status'];
     const version = buildDetails['version'];
     const buildId = buildDetails['build-id'];
-    const codebuildPageUrl = `https://${region}.console.aws.amazon.com/codesuite/codebuild/${account}/projects/${projectName}/build/${buildId}/log`;
+    const streamName = buildDetails['additional-information']['logs']['stream-name'];
+    const codebuildPageUrl = `https://${region}.console.aws.amazon.com/codesuite/codebuild/${account}/projects/${projectName}/build/${streamName}/log`;
     const currentPhaseContext = buildDetails['current-phase-context'];
     const webhookUrl = process.env.WEBHOOK_URL;
     const messages = {
