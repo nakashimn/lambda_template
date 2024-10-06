@@ -8,20 +8,25 @@ exports.handler = async (event) => {
     const buildDetails = event.detail;
     const projectName = buildDetails['project-name'];
     const buildStatus = buildDetails['build-status'];
-    const version = buildDetails['version'];
+    const buildNumber = buildDetails['additional-information']['build-number'];
     const buildId = buildDetails['build-id'];
     const streamName = buildDetails['additional-information']['logs']['stream-name'];
-    const codebuildPageUrl = `https://${region}.console.aws.amazon.com/codesuite/codebuild/${account}/projects/${projectName}/build/${streamName}/log`;
     const currentPhaseContext = buildDetails['current-phase-context'];
     const webhookUrl = process.env.WEBHOOK_URL;
     const messages = {
-        'IN_PROGRESS': process.env.IN_PROGRESS_MESSAGE ?? 'The build has started.',
-        'SUCCESS':  process.env.SUCCESS_MESSAGE ?? 'The build completed successfully.',
-        'FAILED': process.env.FALIED_MESSAGE ?? 'The build failed.'
+        'IN_PROGRESS': process.env.IN_PROGRESS_MESSAGE || 'The build has started.',
+        'SUCCESS': process.env.SUCCESS_MESSAGE || 'The build completed successfully.',
+        'FAILED': process.env.FALIED_MESSAGE || 'The build failed.'
     };
 
+    // construct Codebuild URL
+    var codebuildPageUrl = `https://${region}.console.aws.amazon.com/codesuite/codebuild/${account}/projects/${projectName}`;
+    if (streamName != null) {
+        codebuildPageUrl += `/build/${projectName}%3A${streamName}/log`;
+    }
+
     // logging
-    console.log(`[${appName}] DEBUG | project-name: ${projectName}:${version}`);
+    console.log(`[${appName}] DEBUG | project-name: ${projectName}:${buildNumber}`);
     console.log(`[${appName}] DEBUG | build-id: ${buildId}}`);
     console.log(`[${appName}] DEBUG | build-status: ${buildStatus}`);
     console.log(`[${appName}] DEBUG | codebuild-url: ${codebuildPageUrl}`);
@@ -30,7 +35,7 @@ exports.handler = async (event) => {
 
     // notification
     const message = {
-        text: `${projectName}:${version}\n${messages[buildStatus]}\n\n${codebuildPageUrl}`
+        text: `[${projectName}:${buildNumber}]\n${messages[buildStatus]}\n${codebuildPageUrl}`
     };
     const headers = {'Content-Type': 'application/json'};
     await axios.post(webhookUrl, message, headers)
@@ -45,7 +50,7 @@ exports.handler = async (event) => {
     const response = {
         statusCode: 200,
         body: JSON.stringify({
-            'project-name': `${projectName}:${version}`,
+            'project-name': `${projectName}:${buildNumber}`,
             'build-id': buildId,
             'build-status': buildStatus
         })
