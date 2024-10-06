@@ -25,7 +25,6 @@ exports.handler = async (event) => {
     console.log(`[${appName}] DEBUG | build-status: ${buildStatus}`);
     console.log(`[${appName}] DEBUG | codebuild-url: ${codebuildPageUrl}`);
     console.log(`[${appName}] DEBUG | current-phase-context: ${currentPhaseContext}`);
-    console.log(`[${appName}] DEBUG | env: ${process.env.SAMPLE}`);
 
     // notification
     const message = {
